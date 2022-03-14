@@ -5,7 +5,6 @@ use std::fs::File;
 use std::path::{Path, PathBuf};
 
 use eyre::Report;
-use libflate::gzip::Decoder as GzDecoder;
 use tar::Archive;
 
 pub fn extract(
@@ -16,8 +15,7 @@ pub fn extract(
     let output_file_path = dest_dir.join(extract_file_name);
 
     let tar_file = File::open(&tar_file_path)?;
-    let input = GzDecoder::new(&tar_file)?;
-    let mut archive = Archive::new(input);
+    let mut archive = Archive::new(tar_file);
 
     archive.set_unpack_xattrs(true);
     archive.set_overwrite(true);
